@@ -1,0 +1,87 @@
+spring:
+  datasource:
+    ## 数据库源基本配置
+    type: com.alibaba.druid.pool.DruidDataSource
+    url: jdbc:mysql://localhost:3306/blog?useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    username: root
+    password: 123456
+
+    #数据源其他配置
+    druid:
+      #配置初始大小 最大、最小线程数
+      initial-size: 5
+      min-idle: 5
+      #   CPU核心+1 最好不要超过20，否则数据库加锁时连接过多性能会下降
+      max-active: 20
+      #  最大等待时间,内网800，外网1200(三次握手1s)
+      max-wait: 60000
+      time-between-eviction-runs-millis: 60000
+      # 配置一个连接在池中最大空间时间
+      min-evictable-idle-time-millis: 300000
+      validation-query: SELECT 1
+      test-while-idle: true
+      # 从连接池获得连接时是否检查连接有效性
+      test-on-borrow: false
+      # 从连接池归还时是否检查连接有效性
+      test-on-return: false
+      # 可以支持PSCache(提升写入查询效率),
+      pool-prepared-statements: false
+      #配置监控统计拦截的filters ,start:监控统计、log4j：日志记录， wall:防止sql注入
+      filters: stat,wall,log4j
+      #  保持长连接
+      keep-alive: true
+      max-pool-prepared-statement-per-connection-size: 20
+      use-global-data-source-stat: true
+      connection-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=500
+
+
+
+  #在springboot2.6.0版本之后mvc的默认路径匹配改为了path_pattern_parser会导致swagger报错Failed to start bean ‘documentationPluginsBootstrapper’
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+
+  ##mybatis配置mapper.xml路径
+  redis:
+    database: 0
+    host: 127.0.0.1
+    port: 6379
+    password:
+    jedis:
+      pool:
+        #最大连接时间
+        max-active: 8
+        #最大堵塞时间(负数表示没有限制)
+        max-wait: -1
+        #最大空闲
+        max-idle: 8
+        #最小空闲
+        min-idle: 0
+      #连接超时时间
+    timeout: 10000
+mybatis:
+  mapper-locations:
+    - classpath:mapper/*.xml
+    - classpath*:com/**/mapper/*.xml
+
+
+##pagehelper 配置
+
+##想bean注入的值，jwt有效时长
+jwt:
+  expiration: 10000
+
+
+##security 忽略检查的url
+secure:
+  ignored:
+    urls:         ##这些链接不会被security 拦截
+      - /login
+      - /swagger-ui.html
+      - /user/login
+      - /user/register
+      - /401
+      - /user/blog/**
+      - /user/blogdraft/**
+

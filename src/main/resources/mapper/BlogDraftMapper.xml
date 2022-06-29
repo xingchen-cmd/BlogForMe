@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.forme.blog.mapper.BlogDraftMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.forme.blog.model.entity.BlogDraft">
+        <id column="blog_draft_id" property="blogDraftId"  jdbcType="INTEGER"/>
+        <result column="blog_title" property="blogTitle" jdbcType="VARCHAR"/>
+        <result column="blog_content" property="blogContent" jdbcType="CLOB"/>
+        <result column="blog_author_id" property="blogAuthorId" jdbcType="INTEGER"/>
+        <result column="blog_digest" property="blogDigest"  jdbcType="VARCHAR"/>
+        <result column="create_date" property="createDate" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        blog_draft_id, blog_title, blog_content, blog_author_id, blog_digest, create_date
+    </sql>
+    <!--查找所有草稿博客-->
+    <select id="selectAll" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/>
+        from blog_draft
+    </select>
+    <!--根据主键查找草稿博客-->
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"></include>
+        from blog_draft
+        where blog_draft_id=#{id,jdbcType=INTEGER}
+    </select>
+    <!--通过关键字对草稿博客标题进行模糊搜索-->
+    <select id="selectByTitle" parameterType="java.lang.String" resultMap= "BaseResultMap">
+        select <include refid="Base_Column_List"></include>
+        from blog_draft
+        where blog_title like concat("%",#{key,jdbcType=VARCHAR},"%")
+    </select>
+    <!--通过关键字对草稿博客文章内容进行模糊查询-->
+    <select id="selectByContent" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"></include>
+        from  blog_draft
+        where blog_content like concat("%",#{key,jdbcType=VARCHAR},"%")
+    </select>
+    <!--更改草稿博客-->
+    <update id="updateSelective" parameterType="com.forme.blog.model.entity.BlogDraft">
+        update blog_draft
+        <set>
+            <if test="blogTitle !=null">
+                blog_title=#{blogTitle,jdbcType=VARCHAR},
+            </if>
+            <if test="blogContent !=null">
+                blog_content=#{blog_content,jdbcType=CLOB},
+            </if>
+            <if test="blogAuthorId !=null">
+                blog_author_id=#{blogAuthorId,jdbcType=INTEGER},
+            </if>
+            <if test="blogDigest !=null">
+                blog_digest=#{blogDigest,jdbcType=VARCHAR},
+            </if>
+            <if test="createDate !=null">
+                create_date=#{createDate,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+    </update>
+    <!--写草稿博客-->
+    <insert id="insertSelective" parameterType="com.forme.blog.model.entity.BlogDraft">
+            insert into blog_draft
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="blogId !=null">
+                    blog_id,
+                </if>
+                <if test="blogTitle !=null">
+                    blog_title,
+                </if>
+                <if test="blogContent !=null">
+                    blog_content,
+                </if>
+                <if test="blogAuthorId !=null">
+                    blog_author_id,
+                </if>
+                <if test="blog_digest !=null">
+                    blog_digest,
+                </if>
+                <if test="createDate !=null">
+                    create_date,
+                </if>
+            </trim>
+            values
+            <trim prefix="(" suffix=")" suffixOverrides=",">
+                <if test="blogId !=null">
+                    #{blogId,jdbcType=INTEGER},
+                </if>
+                <if test="blogTitle !=null">
+                    #{blogTitle,jdbcType=VARCHAR},
+                </if>
+                <if test="blogContent !=null">
+                    #{blogContent,jdbcType=BLOC},
+                </if>
+                <if test="blogAuthorId !=null">
+                    #{blogAuthorId,jdbcType=INTEGER},
+                </if>
+                <if test="blog_digest !=null">
+                    #{blogDigest,jdbcType=VARCHAR},
+                </if>
+                <if test="createDate !=null">
+                    #{createDate,jdbcType=TIMESTAMP},
+                </if>
+            </trim>
+
+    </insert>
+    <!--将草稿博客删除-->
+    <delete id="delete" parameterType="java.lang.Integer">
+        delete  from  blog_draft
+        where blog_draft_id=#{id,jdbcType=INTEGER}
+    </delete>
+
+</mapper>

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.forme.blog.mapper.UserMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.forme.blog.model.entity.User">
+        <id column="user_id" property="userId" jdbcType="INTEGER"/>
+        <result column="user_name" property="userName" jdbcType="VARCHAR"/>
+        <result column="user_password" property="userPassword" jdbcType="VARCHAR"/>
+        <result column="nick_Name" property="nickName" jdbcType="VARCHAR"/>
+        <result column="user_info" property="userInfo" jdbcType="VARCHAR"/>
+        <result column="email" property="email" jdbcType="VARCHAR"/>
+        <result column="create_date" property="createDate" jdbcType="TIMESTAMP"/>
+    </resultMap>
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        user_id, user_name, user_password, nick_Name, user_info,email, create_date
+    </sql>
+
+    <!--查询用户数-->
+    <select id="selectUserCount" resultType="java.lang.Integer">
+            select count(*) from user
+    </select>
+    <!--根据用户名查询用户-->
+    <select id="selectByUserName" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/>
+        from user
+        where user_name=#{user_name,jdbcType=VARCHAR}
+    </select>
+    <!--更具用户名和密码查询用户-->
+    <select id="selectByUserNameAndPassword"  resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/>
+        from user
+        where user_name=#{userName,jdbcType=VARCHAR} and user_password=#{userPassword,jdbcType=VARCHAR}
+    </select>
+    <!--通过主键查询用户-->
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/>
+        from user
+        where user_id=#{id,jdbcType=INTEGER}
+    </select>
+    <!--添加用户-->
+    <insert id="insertSelective" parameterType="com.forme.blog.model.entity.User">
+        insert into user
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId!=null">
+                user_id,
+            </if>
+            <if test="userName!=null">
+                user_Name,
+            </if>
+            <if test="userPassword!=null">
+                user_password,
+            </if>
+            <if test="nickName!=null">
+                nick_name,
+            </if>
+            <if test="userInfo!=null">
+                user_info,
+            </if>
+            <if test="email!=null">
+                email,
+            </if>
+            <if test="createDate!=null">
+                create_date,
+            </if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId!=null">
+                #{userId,jdbcType=INTEGER},
+            </if>
+            <if test="userName!=null">
+                #{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="userPassword!=null">
+                #{userPassword,jdbcType=VARCHAR},
+            </if>
+            <if test="nickName!=null">
+                #{nickName,jdbcType=VARCHAR},
+            </if>
+            <if test="userInfo!=null">
+                #{userInfo,jdbcType=VARCHAR},
+            </if>
+            <if test="email!=null">
+                #{email,jdbcType=VARCHAR},
+            </if>
+            <if test="createDate!=null">
+                #{createDate,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <!--更新用户-->
+    <update id="updateSelective" parameterType="com.forme.blog.model.entity.User">
+        update user
+        <set>
+            <if test="userName !=null">
+                user_name=#{userName,jdbcType=VARCHAR},
+            </if>
+            <if test="userPassWord !=null">
+                user_password=#{user_password,jdbcType=VARCHAR},
+            </if>
+            <if test="nickName !=null">
+                nick_name=#{nick_Name,jdbcType=VARCHAR},
+            </if>
+            <if test="userInfo !=null">
+                user_info=#{userInfo,jdbcType=VARCHAR},
+            </if>
+            <if test="email !=null">
+                email=#{email,jdbcType=VARCHAR},
+            </if>
+            <if test="createDate!=null">
+                create_date=#{create_date,jdbcType=TIMESTAMP},
+            </if>
+        </set>
+        where user_id=#{user_id,jdbcType=INTEGER}
+    </update>
+    <!--删除用户-->
+    <delete id="delete" parameterType="java.lang.Integer">
+        delete from user
+        where user_id=#{identity,jdbcType=INTEGER}
+    </delete>
+</mapper>

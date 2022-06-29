@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.forme.blog.mapper.BlogMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.forme.blog.model.entity.Blog">
+        <id column="blog_id" property="blogId"  jdbcType="INTEGER"/>
+        <result column="blog_title" property="blogTitle" jdbcType="VARCHAR"/>
+        <result column="blog_content" property="blogContent"  jdbcType="CLOB"/>
+        <result column="blog_author_id" property="blogAuthorId"  jdbcType="INTEGER"/>
+        <result column="create_date" property="createDate" jdbcType="TIMESTAMP"/>
+        <result column="blog_digest" property="blogDigest" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        blog_id, blog_title, blog_content, blog_author_id, create_date, blog_digest
+    </sql>
+    <!--查询所以博客-->
+    <select id="selectAll" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"></include>
+        from blog
+    </select>
+    <!--根据主键查询博客-->
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"></include>
+        from  blog
+        where blog_id=#{id,jdbcType=INTEGER}
+    </select>
+    <!--根据关键字对博客标题进行模糊查询-->
+    <select id="selectByTitle" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"></include>
+        from blog
+        where blog_title like concat("%",#{key,jdbcType=VARCHAR},"%")
+    </select>
+    <!--根据关键字对博客内容进行模糊查询-->
+    <select id="selectByContent" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"></include>
+        from blog
+        where blog_content like concat("%",#{key,jdbcType=VARCHAR},"%")
+    </select>
+    <!--对博文进行修改-->
+    <update id="updateSelective" parameterType="com.forme.blog.model.entity.Blog">
+        update blog
+        <set>
+            <if test="blogTitle!=null">
+                blog_title=#{blogTitle,jdbcType=VARCHAR},
+            </if>
+            <if test="blogContent!=null">
+                blog_content=#{blogContent,jdbcType=CLOB},
+            </if>
+            <if test="blogAuthorId !=null">
+                blog_author_id=#{blogAuthorId,jdbcType=INTEGER},
+            </if>
+            <if test="createDate !=null">
+                create_date=#{createDate,jdbcType=TIMESTAMP},
+            </if>
+            <if test="blogDigest !=null">
+                blog_digest=#{blogDigest,jdbcType=VARCHAR},
+            </if>
+        </set>
+        where blog_id=#{blogId,jdbcType=INTEGER}
+    </update>
+    <!--添加博文-->
+    <insert id="insertSelective" parameterType="com.forme.blog.model.entity.Blog" useGeneratedKeys="true" keyProperty="blogId">
+        insert into blog
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="blogTitle!=null">
+               blog_title,
+            </if>
+            <if test="blogContent!=null">
+                blog_content,
+            </if>
+            <if test="blogAuthorId !=null">
+                blog_author_id,
+            </if>
+            <if test="createDate !=null">
+                create_date,
+            </if>
+            <if test="blogDigest !=null">
+                blog_digest,
+            </if>
+        </trim>
+        values
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+        <if test="blogTitle!=null">
+            #{blogTitle,jdbcType=VARCHAR},
+        </if>
+        <if test="blogContent!=null">
+            #{blogContent,jdbcType=CLOB},
+        </if>
+        <if test="blogAuthorId !=null">
+            #{blogAuthorId,jdbcType=INTEGER},
+        </if>
+        <if test="createDate !=null">
+            #{createDate,jdbcType=TIMESTAMP},
+        </if>
+        <if test="blogDigest !=null">
+            #{blogDigest,jdbcType=VARCHAR},
+        </if>
+        </trim>
+    </insert>
+    <!--删除博文-->
+    <delete id="delete" parameterType="java.lang.Integer">
+        delete from blog
+        where blog_id=#{id,jdbcType=INTEGER}
+    </delete>
+
+</mapper>

@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.forme.blog.mapper.TagMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.forme.blog.model.entity.Tag">
+        <id column="tag_id" property="tagId" jdbcType="INTEGER"/>
+        <result column="tag_name" property="tagName" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        tag_id, tag_name
+    </sql>
+    <!--查询所有标签-->
+    <select id="selectAll" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"></include>
+        from tag
+    </select>
+    <!--通过标签名字查询标签号-->
+    <select id="selectByName" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select tag_id
+        from tag
+        where tag_name=#{tag_name,jdbcType=VARCHAR}
+    </select>
+    <!--通过标签号查询标签-->
+    <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"/>
+        from tag
+        where tag_id=#{tag,jdbcType=INTEGER}
+    </select>
+    <!--插入新标签-->
+    <insert id="insert" parameterType="com.forme.blog.model.entity.Tag">
+        insert into tag
+        (tag_name) values (#{tagName,jdbcType=VARCHAR})
+    </insert>
+    <!--更爱标签-->
+    <update id="update" parameterType="com.forme.blog.model.entity.Tag">
+        update  tag
+        set tag_name=#{tag_name,jdbcType=VARCHAR}
+        where tag_id=#{tag_id,jdbcType=VARCHAR}
+    </update>
+    <!--删除标签-->
+    <delete id="delete" parameterType="java.lang.Integer">
+        delete from tag
+        where tag_id=#{tagId,jdbcType=INTEGER}
+    </delete>
+
+
+</mapper>

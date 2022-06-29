@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.forme.blog.mapper.TagToBlogMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.forme.blog.model.entity.TagToBlog">
+        <id column="blog_id" property="blogId" jdbcType="INTEGER"/>
+        <result column="tag_id" property="tagId" jdbcType="INTEGER"/>
+    </resultMap>
+    <!-- tag表查询映射-->
+    <resultMap id="TagResultMap" type="com.forme.blog.model.entity.Tag">
+        <id column="tag_id" property="tagId" jdbcType="INTEGER"/>
+        <result column="tag_name" property="tagName" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        blog_id, tag_id
+    </sql>
+
+    <!-- tag表查询结果列 -->
+    <sql id="Tag_Column_List">
+        tag_id, tag_name
+    </sql>
+    <!--根据博客号查询所有标签-->
+    <select id="selectByBlogId" parameterType="java.lang.Integer" resultMap="TagResultMap">
+        select t1.tag_id,t1.tag_name
+        from tag t1
+        inner join tag_to_blog t2
+        on t1.tag_id=t2.tag_id
+        where t2.blog_id==#{blogId,jdbcType=INTEGER}
+    </select>
+    <!--在tag_to_blog添加数据-->
+    <insert id="insert" parameterType="com.forme.blog.model.entity.TagToBlog">
+        insert into tag_to_blog
+        (<include refid="Base_Column_List"></include>)
+        values
+        (#{blogId,jdbcType=INTEGER},#{tagId,jdbcType=INTEGER})
+    </insert>
+    <!--在tag_to_blog中删除数据-->
+    <delete id="delete" parameterType="com.forme.blog.model.entity.TagToBlog">
+        delete from tag_to_blog
+        where blog_id=#{blogId,jdbcType=INTEGER} and tag_id=#{TagId,jdbcType=INTEGER}
+    </delete>
+    <!--根据id删除tag_to_blog中删除数据-->
+    <delete id="deleteById" parameterType="java.lang.Integer">
+            delete from tag_to_blog
+            where tag_id=#{tagId,jdbcType=INTEGER}
+    </delete>
+</mapper>

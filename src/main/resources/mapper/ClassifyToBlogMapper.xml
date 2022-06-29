@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.forme.blog.mapper.ClassifyToBlogMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.forme.blog.model.entity.ClassifyToBlog">
+        <id column="classify_id" property="classifyId" jdbcType="INTEGER"/>
+        <result column="blog_id" property="blogId" jdbcType="INTEGER"/>
+    </resultMap>
+    <!--blog表的查询映射结果-->
+    <resultMap id="BlogResultMap" type="com.forme.blog.model.entity.Blog">
+        <id column="blog_id" property="blogId"  jdbcType="INTEGER"/>
+        <result column="blog_title" property="blogTitle" jdbcType="VARCHAR"/>
+        <result column="blog_content" property="blogContent"  jdbcType="CLOB"/>
+        <result column="blog_author_id" property="blogAuthorId"  jdbcType="INTEGER"/>
+        <result column="create_date" property="createDate" jdbcType="TIMESTAMP"/>
+        <result column="blog_digest" property="blogDigest" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        classify_id, blog_id
+    </sql>
+    <!--blog表的查询结果列-->
+    <sql id="Blog_Column_List">
+        blog_id, blog_title, blog_content, blog_author_id, create_date, blog_digest
+    </sql>
+
+    <select id="selectByBlogIdAndClassifyId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"></include>
+        from classify_to_blog
+        where classify_id=#{classifyId,jdbcType=INTEGER} and blog_id=#{blogId,jdbcType=INTEGER}
+    </select>
+    <!--根据分类号查询博客集合-->
+    <select id="selectByClassifyId" parameterType="java.lang.Integer" resultMap="BlogResultMap">
+            select b.blog_id,b.blog_title,b.blog_content,b.blog_author_id,b.create_date,b.blog_digest
+            from blog  b
+            inner join classify_to_blog  c
+            on b.blog_id=c.blog_id
+            where classify_id=#{classifyId,jdbcType=INTEGER}
+    </select>
+    <!--在classify_to_blog表中添加数据-->
+    <insert id="insert" parameterType="com.forme.blog.model.entity.ClassifyToBlog">
+        insert into classify_to_blog
+        (<include refid="Base_Column_List"></include>)
+        values
+        (#{classifyId,jdbcType=INTEGER},#{blogId,jdbcType=INTEGER})
+    </insert>
+    <!--删除classify_to_blog表中的数据-->
+    <delete id="delete" parameterType="com.forme.blog.model.entity.ClassifyToBlog">
+        delete from classify_to_blog
+        where classify_id=#{classifyId,jdbcType=INTEGER} and blog_id=#{blogId,jdbcType=INTEGER}
+    </delete>
+    <!--通过classify_id删除classify_to_blog表中的数据-->
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        delete from classify_to_blog
+        where classify_id=#{classifyId,jdbcType=INTEGER}
+    </delete>
+
+
+
+
+</mapper>

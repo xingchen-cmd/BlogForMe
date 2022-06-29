@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.forme.blog.mapper.ClassifyMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.forme.blog.model.entity.Classify">
+        <id column="classify_id" property="classifyId" jdbcType="INTEGER"/>
+        <result column="classify_name" property="classifyName" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        classify_id, classify_name
+    </sql>
+    <!-- 查询所有分类-->
+    <select id="selectAll" resultMap="BaseResultMap">
+        select  <include refid="Base_Column_List"></include>
+        from classify
+    </select>
+
+    <!-- 根据主键查询分类-->
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"></include>
+        from classify
+        where classify_id=#{classifyId,jdbcType=INTEGER}
+    </select>
+
+    <!--根据分类名查询分类号-->
+    <select id="selectByClassifyName" parameterType="java.lang.String" resultType="java.lang.Integer">
+        select classify_id
+        from  classify
+        where classify_name=#{classifyName,jdbcType=VARCHAR}
+    </select>
+
+    <!--更新分类名-->
+    <update id="update" parameterType="com.forme.blog.model.entity.Classify" >
+        update classify
+        set classify_name=#{classifyName,jdbcType=VARCHAR}
+        where classify_id=#{classifyId,jdbcType=INTEGER}
+    </update>
+
+    <!--添加新分类-->
+    <insert id="insert" parameterType="com.forme.blog.model.entity.Classify">
+        insert into classify
+        (classify_name)
+        values
+        (#{classifyName,jdbcType=VARCHAR})
+    </insert>
+
+    <!--删除分类-->
+    <delete id="delete" parameterType="java.lang.Integer">
+        delete from classify
+        where classify_id=#{classifyId,jdbcType=INTEGER}
+    </delete>
+
+
+</mapper>

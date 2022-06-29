@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.forme.blog.mapper.CommentMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.forme.blog.model.entity.Comment">
+        <id column="comment_id" property="commentId" jdbcType="INTEGER"/>
+        <result column="comment_user" property="commentUser" jdbcType="VARCHAR"/>
+        <result column="comment_parent_id" property="commentParentId" jdbcType="INTEGER"/>
+        <result column="comment_email" property="commentEmail" jdbcType="VARCHAR"/>
+        <result column="comment_root_id" property="commentRootId" jdbcType="INTEGER"/>
+        <result column="comment_content" property="commentContent" jdbcType="VARCHAR"/>
+        <result column="comment_date" property="commentDate" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        comment_id, comment_user, comment_parent_id, comment_email, comment_root_id, comment_content, comment_date
+    </sql>
+    <!--根据评论号查询评论-->
+    <select id="selectByCommentId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+            select <include refid="Base_Column_List"></include>
+            from comment
+            where comment_id=#{commentId,jdbcType=INTEGER}
+    </select>
+
+    <!--根据评论根节点，查询到该评论下的所有评论-->
+    <select id="selectByRootId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"></include>
+        from comment
+        where comment_root_id=#{rooId,jdbcType=INTEGER}
+    </select>
+    <!--根据父评论号查询所有回复-->
+    <select id="selectByParentId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+            select <include refid="Base_Column_List"></include>
+            from comment
+            where comment_parent_id=#{parentId,jdbcType=INTEGER}
+    </select>
+    <!--插入评论-->
+    <insert id="insertSelective" parameterType="com.forme.blog.model.entity.Comment">
+        insert into comment
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="commentUser !=null">
+                comment_user,
+            </if>
+            <if test="commentParentId !=null">
+                comment_parent_id,
+            </if>
+            <if test="commentEmail !=null">
+                comment_email,
+            </if>
+            <if test="commentRootId !=null">
+                comment_root_id,
+            </if>
+            <if test="commentContent !=null">
+                comment_content,
+            </if>
+            <if test="commentDate !=null">
+                comment_date,
+            </if>
+        </trim>
+        <trim prefix="values(" suffix=")" suffixOverrides=",">
+            <if test="commentUser !=null">
+                #{commentUser,jdbcType=VARCHAR},
+            </if>
+            <if test="commentParentId !=null">
+                #{commentParentId,jdbcType=INTEGER},
+            </if>
+            <if test="commentEmail !=null">
+                #{commentEmail,jdbcType=VARCHAR},
+            </if>
+            <if test="commentRootId !=null">
+                #{commentRootId,jdbcType=INTEGER},
+            </if>
+            <if test="commentContent !=null">
+                #{commentContent,jdbcType=VARCHAR},
+            </if>
+            <if test="commentDate !=null">
+                #{comment_date,jdbcType=VARCHAR},
+            </if>
+        </trim>
+    </insert>
+    <!--删除评论-->
+    <delete id="delete" parameterType="java.lang.Integer">
+        delete from comment
+        where comment_id=#{comment_id,jdbcType=INTEGER}
+    </delete>
+
+</mapper>
