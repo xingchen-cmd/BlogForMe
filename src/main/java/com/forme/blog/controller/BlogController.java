@@ -8,6 +8,7 @@ import com.forme.blog.dto.TagParam;
 import com.forme.blog.model.entity.Classify;
 import com.forme.blog.model.entity.Tag;
 import com.forme.blog.service.BlogService;
+import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -61,6 +62,23 @@ public class BlogController {
     public ResultResponse addBlogToClassify(@PathVariable("classifyId") Integer classifyId, @RequestBody @Valid BlogListParam blogListParam){
         return  blogService.addBlogToClassify(classifyId,blogListParam.getBlogIdList());
     }
+
+
+    @PutMapping("/{blogId}/update")
+    public ResultResponse updateBlog(@PathVariable Integer blogId,@RequestBody @Valid BlogParam blogParam){
+        return blogService.updateBlog(blogId,blogParam);
+    }
+
+    @GetMapping("/{blogId}")
+    public ResultResponse getBlogById(@PathVariable Integer blogId){
+        return blogService.getBlogById(blogId);
+    }
+
+    @GetMapping("")
+    public ResultResponse getBlog(Integer page,Integer pageSize){
+        return blogService.getBlog(page,pageSize);
+    }
+
 
 
 }

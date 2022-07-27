@@ -18,10 +18,14 @@ public interface CommentToBlogMapper  {
 
     List<Comment> selectByBlogId(Integer blogId);
 
+    CommentToBlog selectByCommentId(Integer commentId);
+
     int insert(CommentToBlog commentToBlog);
 
     int deleteByCommentId(Integer commentId);
 
     int deleteByBlogId(Integer blogId);
+
+    List<Comment> selectByBlogIdAndRootCommentId(Integer blogId,Integer rootCommentId);
 
 }

@@ -19,7 +19,12 @@ public enum ResultCode implements IErrorCode{
     CLASSIFY_CREATE_SECCESS(200,"classify创建成功"),
     CLASSIFY_UPDATE_FAILED(421,"classify更改失败"),
     CLASSIFY_NOT_EMPTY(421,"classify已经不存在"),
-    BLOG_NOT_EMPTY(422,"blog不存在");
+    BLOG_NOT_EMPTY(422,"blog不存在"),
+    BLOG_UPDATE_FAILED(422,"blog修改失败"),
+    BLOGDRAFT_NOT_EMPTY(423,"草稿箱中该博客不存在"),
+    BLOGDRAFT_ADD_FAILED(423,"blogDraft添加失败"),
+    BLOGDRAFT_UPDATE_FAILED(423,"blogDraft更新失败"),
+    COMMENT_IS_DELETE(424,"评论已删除");
 
     private int code;
     private String message;

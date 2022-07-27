@@ -26,13 +26,27 @@
     <sql id="Comment_Column_List">
         comment_id, comment_user, comment_parent_id, comment_email, comment_root_id, comment_content, comment_date
     </sql>
-    <!--根据博客号查询该博客的所有评论-->
+    <!--根据博客号查询该博客的所有根评论-->
     <select id="selectByBlogId" parameterType="java.lang.Integer" resultMap="CommentResultMap">
         select c1.comment_id,c1.comment_user,c1.comment_parent_id,c1.comment_email,c1.comment_root_id,c1.comment_content,c1.comment_date
         from comment  c1
         inner join comment_to_blog c2
         on c1.comment_id=c2.comment_id
-        where c2.blog_id=#{blog_id,jdbcType=INTEGER}
+        where c2.blog_id=#{blogId,jdbcType=INTEGER} and c1.comment_root_id is null
+    </select>
+    <!--根据博客号查询该博客的根评论下的所有子评论-->
+    <select id="selectByBlogIdAndRootCommentId" parameterType="java.lang.Integer" resultMap="CommentResultMap">
+        select c1.comment_id,c1.comment_user,c1.comment_parent_id,c1.comment_email,c1.comment_root_id,c1.comment_content,c1.comment_date
+        from comment  c1
+                 inner join comment_to_blog c2
+                            on c1.comment_id=c2.comment_id
+        where c2.blog_id=#{blogId,jdbcType=INTEGER} and c1.comment_root_id=#{rootCommentId,jdbcType=INTEGER}
+    </select>
+
+    <select id="selectByCommentId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+        select <include refid="Base_Column_List"></include>
+        from comment_to_blog
+        where comment_id=#{commentId,jdbcType=INTEGER}
     </select>
     <!--在comment_to_blog 表中插入数据-->
     <insert id="insert" parameterType="com.forme.blog.model.entity.CommentToBlog">

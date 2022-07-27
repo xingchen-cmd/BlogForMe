@@ -37,7 +37,7 @@
             where comment_parent_id=#{parentId,jdbcType=INTEGER}
     </select>
     <!--插入评论-->
-    <insert id="insertSelective" parameterType="com.forme.blog.model.entity.Comment">
+    <insert id="insertSelective" parameterType="com.forme.blog.model.entity.Comment" keyProperty="commentId" useGeneratedKeys="true">
         insert into comment
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="commentUser !=null">
@@ -76,7 +76,7 @@
                 #{commentContent,jdbcType=VARCHAR},
             </if>
             <if test="commentDate !=null">
-                #{comment_date,jdbcType=VARCHAR},
+                #{commentDate,jdbcType=TIMESTAMP},
             </if>
         </trim>
     </insert>

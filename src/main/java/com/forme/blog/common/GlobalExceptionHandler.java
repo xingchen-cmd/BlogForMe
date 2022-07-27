@@ -53,5 +53,11 @@ public class GlobalExceptionHandler {
         return ResultResponse.failed(ResultCode.VALIDATEFAILED,message);
     }
 
+    @ExceptionHandler(RuntimeException.class)
+    public ResultResponse runtimeException(RuntimeException e){
+        LOGGER.error(e.getMessage());
+        e.printStackTrace();
+        return ResultResponse.failed(ResultCode.FAILED);
+    }
 
 }

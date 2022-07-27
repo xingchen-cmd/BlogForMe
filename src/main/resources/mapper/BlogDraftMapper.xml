@@ -47,7 +47,7 @@
                 blog_title=#{blogTitle,jdbcType=VARCHAR},
             </if>
             <if test="blogContent !=null">
-                blog_content=#{blog_content,jdbcType=CLOB},
+                blog_content=#{blogContent,jdbcType=CLOB},
             </if>
             <if test="blogAuthorId !=null">
                 blog_author_id=#{blogAuthorId,jdbcType=INTEGER},
@@ -59,13 +59,14 @@
                 create_date=#{createDate,jdbcType=TIMESTAMP},
             </if>
         </set>
+        where blog_draft_id=#{blogDraftId,jdbcType=INTEGER}
     </update>
     <!--写草稿博客-->
     <insert id="insertSelective" parameterType="com.forme.blog.model.entity.BlogDraft">
             insert into blog_draft
             <trim prefix="(" suffix=")" suffixOverrides=",">
-                <if test="blogId !=null">
-                    blog_id,
+                <if test="blogDraftId !=null">
+                    blog_draft_id,
                 </if>
                 <if test="blogTitle !=null">
                     blog_title,
@@ -76,7 +77,7 @@
                 <if test="blogAuthorId !=null">
                     blog_author_id,
                 </if>
-                <if test="blog_digest !=null">
+                <if test="blogDigest !=null">
                     blog_digest,
                 </if>
                 <if test="createDate !=null">
@@ -85,19 +86,19 @@
             </trim>
             values
             <trim prefix="(" suffix=")" suffixOverrides=",">
-                <if test="blogId !=null">
-                    #{blogId,jdbcType=INTEGER},
+                <if test="blogDraftId !=null">
+                    #{blogDraftId,jdbcType=INTEGER},
                 </if>
                 <if test="blogTitle !=null">
                     #{blogTitle,jdbcType=VARCHAR},
                 </if>
                 <if test="blogContent !=null">
-                    #{blogContent,jdbcType=BLOC},
+                    #{blogContent,jdbcType=CLOB},
                 </if>
                 <if test="blogAuthorId !=null">
                     #{blogAuthorId,jdbcType=INTEGER},
                 </if>
-                <if test="blog_digest !=null">
+                <if test="blogDigest !=null">
                     #{blogDigest,jdbcType=VARCHAR},
                 </if>
                 <if test="createDate !=null">

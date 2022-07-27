@@ -23,4 +23,10 @@ public interface BlogService {
     ResultResponse deleteClassify(Integer classifyId);
 
     ResultResponse addBlogToClassify(Integer classifyId, List<Integer> blogIdList);
+
+    ResultResponse updateBlog(Integer blogId, BlogParam blogParam);
+
+    ResultResponse getBlogById(Integer blogId);
+
+    ResultResponse getBlog(Integer page, Integer pageSize);
 }

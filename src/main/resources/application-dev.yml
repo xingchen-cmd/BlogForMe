@@ -83,5 +83,6 @@ secure:
       - /user/register
       - /401
       - /user/blog/**
-      - /user/blogdraft/**
+      - /user/blogDraft/**
+      - /blog/**
 

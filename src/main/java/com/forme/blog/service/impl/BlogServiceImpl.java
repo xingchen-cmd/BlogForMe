@@ -8,6 +8,8 @@ import com.forme.blog.mapper.*;
 import com.forme.blog.model.entity.*;
 import com.forme.blog.service.BlogService;
 import com.forme.blog.util.ParamUtil;
+import com.github.pagehelper.PageHelper;
+import com.github.pagehelper.PageInfo;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -56,6 +58,10 @@ public class BlogServiceImpl implements BlogService {
         blogMapper.insertSelective(blog);
         Integer blogId=blog.getBlogId();
         for(Integer tagId:blogParam.getTagIdList()){
+            Tag tag=tagMapper.selectById(tagId);
+            if(Objects.isNull(tag)){
+                return ResultResponse.failed(ResultCode.TAG_NOTEMPTY);
+            }
             tagToBlogMapper.insert(new TagToBlog().setBlogId(blogId).setTagId(tagId));
         }
         return ResultResponse.success(null);
@@ -136,6 +142,35 @@ public class BlogServiceImpl implements BlogService {
                 classifyToBlogMapper.insert(new ClassifyToBlog().setBlogId(blogId).setClassifyId(classifyId));
         }
         return ResultResponse.success(null);
+    }
+
+    @Override
+    public ResultResponse updateBlog(Integer blogId, BlogParam blogParam) {
+        Blog blog=blogMapper.selectByPrimaryKey(blogId);
+        if(Objects.isNull(blog)){
+            return ResultResponse.failed(ResultCode.BLOG_NOT_EMPTY);
+        }
+        BeanUtils.copyProperties(blogParam,blog);
+        if(blogMapper.updateSelective(blog)>0){
+            return ResultResponse.success(null);
+        }
+        return ResultResponse.failed(ResultCode.BLOGDRAFT_UPDATE_FAILED);
+    }
+
+    @Override
+    public ResultResponse getBlogById(Integer blogId) {
+        Blog blog=blogMapper.selectByPrimaryKey(blogId);
+        if(Objects.isNull(blog)){
+            return ResultResponse.failed(ResultCode.BLOG_NOT_EMPTY);
+        }
+        return ResultResponse.success(blog);
+    }
+
+    @Override
+    public ResultResponse getBlog(Integer page, Integer pageSize) {
+        PageHelper.startPage(page,pageSize);
+        List<Blog> blogs=blogMapper.selectAll();
+        return ResultResponse.success(new PageInfo<>(blogs));
     }
 
 

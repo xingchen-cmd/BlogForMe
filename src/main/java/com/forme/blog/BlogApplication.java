@@ -10,7 +10,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication
 @MapperScan("com.forme.blog.mapper")
-
+@EnableOpenApi
 public class BlogApplication {
 
     public static void main(String[] args) {
